@@ -40,6 +40,36 @@ function createMovie() {
     function (err, res) {
       if (err) throw err;
       console.log(res.affectedRows + "movies Added !!😁 \n");
+      updateMovie();
     }
   );
+}
+
+function updateMovie() {
+  console.log("Updating Maya Movie \n");
+  var query = connection.query(
+    "UPDATE movies SET ? WHERE ?",
+    [
+      //title: "Raya",
+      // price: 17,
+      // rating: 9.5,
+      // year: 2001,
+      // quantity: 29,
+      {
+        price: 30,
+      },
+      {
+        title: "Raya",
+      },
+    ],
+    function (err, res) {
+      if (err) throw err;
+      console.log(res.affectedRows + " products updated!\n");
+      // Call deleteProduct AFTER the UPDATE completes
+      // deleteProduct();
+    }
+  );
+
+  // logs the actual query being run
+  console.log(query.sql);
 }
