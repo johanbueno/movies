@@ -1,0 +1,22 @@
+{
+  "name": "movie_buster",
+  "version": "1.0.0",
+  "description": "movie data base",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johanbueno/movie_buster.git"
+  },
+  "author": "Johan Bueno",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johanbueno/movie_buster/issues"
+  },
+  "homepage": "https://github.com/johanbueno/movie_buster#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
