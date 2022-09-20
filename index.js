@@ -65,11 +65,38 @@ function updateMovie() {
     function (err, res) {
       if (err) throw err;
       console.log(res.affectedRows + " products updated!\n");
-      // Call deleteProduct AFTER the UPDATE completes
-      // deleteProduct();
+      // Call deleteMovie AFTER the UPDATE completes
+      deleteMovie();
     }
   );
 
   // logs the actual query being run
   console.log(query.sql);
 }
+
+function deleteMovie() {
+  console.log("Deleting Spy kids \n");
+  connection.query(
+    "DELETE FROM movies WHERE ?",
+    {
+      title: "Spy kids",
+    },
+    function (err, res) {
+      if (err) throw err;
+      console.log(res.affectedRows + " Movie deleted!\n");
+      // Call readMovies AFTER the DELETE completes
+      readMovies();
+    }
+  );
+}
+
+function readMovies() {
+  console.log("Selecting all Movies...\n");
+  connection.query("SELECT * FROM movies", function (err, res) {
+    if (err) throw err;
+    // Log all results of the SELECT statement
+    console.log(res);
+    connection.end();
+  });
+}
+git;
