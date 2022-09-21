@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -15,8 +16,85 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId + "\n");
-  createMovie();
+  // createMovie();
+  start();
 });
+
+function start() {
+  inquirer
+    .prompt({
+      name: "buyOrDonate",
+      type: "list",
+      message: "Would you like to buy a movie or Donate",
+      choices: ["BUY", "DONATE", "EXIT"],
+    })
+    .then(function (answer) {
+      if (answer.buyOrDonate === "BUY") {
+        buy();
+      } else if (answer.buyOrDonate === "DONATE") {
+        donate();
+      } else {
+        connection.end();
+      }
+    });
+}
+
+function buy() {
+  connection.query("SELECT * FROM movies", function (err, results) {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "list",
+          choices: function () {
+            var choiceArray = [];
+            for (var i = 0; i < results.length; i++) {
+              choiceArray.push(results[i].title);
+            }
+            return choiceArray;
+          },
+          message: "Which movie would you like to buy?",
+        },
+        {
+          name: "bid",
+          type: "input",
+          message: "How much would you like to pay?",
+        },
+      ])
+      .then(function (answer) {
+        var chosenItem;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i].title === answer.choice) {
+            chosenItem = results[i];
+          }
+        }
+        if (chosenItem.price < parseInt(answer.bid)) {
+          // bid was high enough, so update db, let the user know, and start over
+          connection.query(
+            "UPDATE movies SET ? WHERE ?",
+            [
+              {
+                price: answer.bid,
+              },
+              {
+                id: chosenItem.id,
+              },
+            ],
+            function (error) {
+              if (error) throw err;
+              console.log("new price on the movie !");
+              start();
+            }
+          );
+        } else {
+          // bid wasn't high enough, so apologize and start over
+          console.log("Your bid was too low. Try again...");
+          start();
+        }
+      });
+  });
+}
 
 function createMovie() {
   console.log("Inserting a new Movie....\n");
@@ -99,4 +177,3 @@ function readMovies() {
     connection.end();
   });
 }
-git;
