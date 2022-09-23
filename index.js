@@ -25,14 +25,14 @@ function start() {
     .prompt({
       name: "buyOrDonate",
       type: "list",
-      message: "Would you like to buy a movie or Donate",
-      choices: ["BUY", "DONATE", "EXIT"],
+      message: "Would you like to buy a movie or create",
+      choices: ["BUY", "CREATE", "EXIT"],
     })
     .then(function (answer) {
       if (answer.buyOrDonate === "BUY") {
         buy();
-      } else if (answer.buyOrDonate === "DONATE") {
-        donate();
+      } else if (answer.buyOrDonate === "CREATE") {
+        creatingMovie();
       } else {
         connection.end();
       }
@@ -96,17 +96,59 @@ function buy() {
   });
 }
 
-function donate() {
-  inquirer.prompt([
-    {
-      name: "title",
-      type: "input",
-      message: "Please type the title of the movie",
-    },
-    {},
-    {},
-    {},
-  ]);
+function creatingMovie() {
+  inquirer
+    .prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "Please type the title of the movie",
+      },
+      {
+        name: "price",
+        type: "input",
+        message: "how much will be the release price  ",
+        validate: function (value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        },
+      },
+      {
+        name: "rating",
+        type: "input",
+        message: "Please rate the movie from 1 to 10 ",
+      },
+      {
+        name: "year",
+        type: "input",
+        message: "What year the movie will be release ",
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "How many movies will be available on cd or bluray ",
+      },
+    ])
+    .then(function (answer) {
+      connection.query(
+        "INSERT INTO movies SET ?",
+        {
+          title: answer.title,
+          price: answer.price || 0,
+          rating: answer.rating || 0,
+          year: answer.year,
+          quantity: answer.quantity,
+        },
+        function (err) {
+          if (err) throw err;
+          console.log("Your movie is created on Sony Data base !");
+
+          start();
+        }
+      );
+    });
 }
 
 function createMovie() {
