@@ -96,6 +96,19 @@ function buy() {
   });
 }
 
+function donate() {
+  inquirer.prompt([
+    {
+      name: "title",
+      type: "input",
+      message: "Please type the title of the movie",
+    },
+    {},
+    {},
+    {},
+  ]);
+}
+
 function createMovie() {
   console.log("Inserting a new Movie....\n");
   var query = connection.query(
