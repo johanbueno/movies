@@ -26,13 +26,15 @@ function start() {
       name: "buyOrDonate",
       type: "list",
       message: "Would you like to buy a movie or create",
-      choices: ["BUY", "CREATE", "EXIT"],
+      choices: ["BUY", "CREATE", "DELETE", "EXIT"],
     })
     .then(function (answer) {
       if (answer.buyOrDonate === "BUY") {
         buy();
       } else if (answer.buyOrDonate === "CREATE") {
         creatingMovie();
+      } else if (answer.buyOrDonate === "DELETE") {
+        deleteMovie();
       } else {
         connection.end();
       }
